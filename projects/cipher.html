@@ -1,0 +1,71 @@
+<!doctype html>
+
+<html>
+  <head>
+      <title>Cipher</title>
+  </head>
+
+  <body>
+    <p>Ciphers are cool. I came across an interesting cipher created by a friend on Facebook. It was a public post and a few friends of the individual were commenting with the known secret characters. </p>
+    <p>For example, a message stated, <em>"42325371 6132 4361 7463 2153636232"</em></p>
+
+    <p>A couple interesting features to note:</p>
+    <ul>
+      <li>the length, N, of the string of numbers is even (mod 2)</li>
+      <li>N (mod 4) is not 0, so four digit numbers are unlikely to represent anything</li>
+      <li>two digit integers like 61 repeat</li>
+    </ul>
+
+    <p>Different simple ciphers rely on a key where each special character is defined. This cipher is not too different. Two digit integers are used to represent a letter of the alphabet. How can we figure out which two digit number encodes which letter?
+    Note: It could've also been possible for the two digit numbers to encode punctuation, but I disregarded the possibility since multiple messages would end with a period, exclamation mark, question mark, etc. and distinct numbers at the end of the messages would repeat.
+    Also: As I will explain, this cipher could have been harder to crack if, for example, the encodings were different for each message depending on the current date, hour, or minute.</p>
+
+    <p>Now, the problem was simplified: each of the 26 letters of the alphabet had their own encoding (a number from 10 to 99), and all I would need to do was figure out which letter was represented by a certain number.
+    If I only had one message to work with, I would need to guess the message before assigning letters. Fortunately, there were many ciphers posted (all using the same encoding).</p>
+
+    <p>To begin, I had to try guessing which number corresponded to which letter. The English language has few one letter and two letter words that are commonly used. For example, there are two one letter words, "a" and "I". There are a few two letter words: "of", "to", "is", "so", etc.
+    Then, after bringing in all the messages into a Python script, I started to guess a few of the words and continually checked to see if other words appeared. I needed to know the frequency of the two-digit numbers. A few lines of Python code helped complile the messages and display the wanted frequencies...</p>
+
+    <pre><code>&nbsp;&nbsp;import copy
+
+    #Take away the spaces and newlines
+    message1 = "42325371 6132 \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4361 7463 2153636232".replace(' ', '')
+
+    message2 = "2193 \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7463 4374 8142327332 216293636232 \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;81422181 232162 73322131 81424374".replace(' ', '')
+
+    message3 = "81217131913292333111".replace(' ', '')
+
+    message4 = "234273437481612174 4374 215391219374 74822342 21 \
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;72732332733333832181 41839473 742232 9473".replace(' ', '')
+
+    message5 = "81422181 41732183438193 3321535374 326231436241 8142637432 3332325374 814263".replace(' ', '')
+
+    message6 = "33638273 7481327174 8142437381323262 53328181327374 222123529121733174".replace(' ', '')
+
+    message7 = "8131 5111612122114111 42112321 9122823292339331 944352323331713291337241".replace(' ', '')
+
+    message8 = "4281817174 3262 61 914352437132314321 637341 91435243 8343413262327332 234371423273".replace(' ', '')
+
+    #Compile
+    rawMessages = [message1, message2, message3, message4, message5, message6, message7, message8]</code></pre>
+
+    <pre><code>&nbsp;&nbsp;#Creation of dictionaries of specific 2-combinations
+    dict2Combo = {}
+    for message in rawMessages:
+    &nbsp;&nbsp;&nbsp;&nbsp;for i in range(0, len(message), 2):
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if dict2Combo.has_key(message[i:i+2]):
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dict2Combo[message[i:i+2]] += 1
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dict2Combo[message[i:i+2]] = 1
+
+    print "The dictionary of two's: \n", dict2Combo</code></pre>
+
+    <p>I setup the messages so that their format (as seen in the original posts) remained intact. I believed that the formatting of the string of
+       numbers may have a different meaning, so although the code removes spaces, I could still keep track of how the string was origninally represented.</p>
+
+    <p>Modified 6/8/16 by Pedro Sandoval </p>   
+    </body>
+</html>
